@@ -19,10 +19,6 @@ public class DeliveryTest {
 
     final int defermentDays = 3;
 
-    public String generateDate(int days, String pattern) {
-        return LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern(pattern));
-    }
-
     @Test
     void shouldSubmitDeliveryCardRequestHappy() {
         open("http://localhost:9999");
@@ -39,7 +35,7 @@ public class DeliveryTest {
         sendButton.click();
         $("[data-test-id='success-notification']").shouldBe(visible, Duration.ofSeconds(15));
         $("[data-test-id='success-notification'] .notification__content")
-                .shouldBe(Condition.matchText(dateEvent), Duration.ofSeconds(15));
+                .shouldBe(Condition.matchText("Встреча успешно запланирована на " + dateEvent), Duration.ofSeconds(15));
         val rand = new Random();
         val newDateEvent = DataGenerator.generateDate(defermentDays * (rand.nextInt(10) + 1));
         dateInput.sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
@@ -48,6 +44,6 @@ public class DeliveryTest {
         $("[data-test-id='replan-notification']").shouldBe(visible, Duration.ofSeconds(15));
         $("[data-test-id='replan-notification'] button").click();
         $("[data-test-id='success-notification'] .notification__content")
-                .shouldBe(Condition.matchText(newDateEvent), Duration.ofSeconds(15));
+                .shouldBe(Condition.matchText("Встреча успешно запланирована на " + newDateEvent), Duration.ofSeconds(15));
     }
 }
