@@ -45,7 +45,7 @@ public class DeliveryTest {
         val sendButton = $$("button").find(Condition.text("Запланировать"));
         sendButton.click();
         $("[data-test-id='success-notification']").shouldBe(visible, Duration.ofSeconds(15));
-        $("[data-test-id='success-notiication'] .notification__content")
+        $("[data-test-id='success-notification'] .notification__content")
                 .shouldBe(Condition.matchText("Встреча успешно запланирована на " + dateEvent), Duration.ofSeconds(15));
         val rand = new Random();
         val newDateEvent = DataGenerator.generateDate(defermentDays * (rand.nextInt(10) + 1));
