@@ -1,7 +1,11 @@
 package ru.netology;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
 import lombok.val;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 import ru.netology.data.DataGenerator;
@@ -15,6 +19,16 @@ import static com.codeborne.selenide.Selenide.*;
 public class DeliveryTest {
 
     final int defermentDays = 3;
+
+    @BeforeAll
+    static void setUpAll() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
+
+    @AfterAll
+    static void tearDownAll() {
+        SelenideLogger.removeListener("allure");
+    }
 
     @Test
     void shouldSubmitDeliveryCardRequestHappy() {
@@ -31,7 +45,7 @@ public class DeliveryTest {
         val sendButton = $$("button").find(Condition.text("Запланировать"));
         sendButton.click();
         $("[data-test-id='success-notification']").shouldBe(visible, Duration.ofSeconds(15));
-        $("[data-test-id='success-notification'] .notification__content")
+        $("[data-test-id='success-notiication'] .notification__content")
                 .shouldBe(Condition.matchText("Встреча успешно запланирована на " + dateEvent), Duration.ofSeconds(15));
         val rand = new Random();
         val newDateEvent = DataGenerator.generateDate(defermentDays * (rand.nextInt(10) + 1));
